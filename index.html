@@ -3,99 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MGKEITCTF — 3 уровня</title>
+  <title>MGKEITCTF — 3 уровня (пошагово)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card { box-shadow: 0 10px 30px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.06); }
     .glow { text-shadow: 0 0 20px rgba(59,130,246,.35); }
-    .step-active { background: linear-gradient(90deg, #60a5fa, #a78bfa); color: white; }
-    .step-done   { background: #22c55e; color: white; }
+    .step { background: #0b1220; border: 1px solid #1f2a44; }
+    .step-active { background: linear-gradient(90deg, #60a5fa, #a78bfa); color: #0b1220; font-weight: 700; }
     .confetti { position: fixed; top: -10px; width: 8px; height: 14px; opacity: .9; animation: fall linear forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: .95; } }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100">
   <header class="max-w-5xl mx-auto px-4 pt-10 pb-6">
-    <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — тренировочный мини‑сайт (3 уровня)</h1>
-    <p class="mt-3 text-slate-300">Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Все проверки флагов идут на сервере — в коде страницы флагов нет.</p>
+    <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — тренировочный мини‑сайт</h1>
+    <p class="mt-3 text-slate-300">Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются <strong>по одному</strong>. Проверка флагов идёт на сервере.</p>
   </header>
-// => "MGKEITCTF{web_warrior}"
+
+  <!-- Навигация-степпер -->
   <section class="max-w-5xl mx-auto px-4">
     <div class="grid grid-cols-3 gap-3">
-      <div id="step1" class="card rounded-2xl p-3 text-center border border-slate-800 step-active">Уровень 1</div>
-      <div id="step2" class="card rounded-2xl p-3 text-center border border-slate-800">Уровень 2</div>
-      <div id="step3" class="card rounded-2xl p-3 text-center border border-slate-800">Уровень 3</div>
+      <button id="stepBtn1" class="step rounded-2xl p-3 text-center" onclick="goto(1)">Уровень 1</button>
+      <button id="stepBtn2" class="step rounded-2xl p-3 text-center" onclick="goto(2)">Уровень 2</button>
+      <button id="stepBtn3" class="step rounded-2xl p-3 text-center" onclick="goto(3)">Уровень 3</button>
     </div>
   </section>
 
   <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
     <div class="flex gap-3 items-end">
-      <label class="text-sm text-slate-300">Ник/ФИО для таблицы результатов (необязательно):</label>
+      <label class="text-sm text-slate-300">Ник/ФИО (для зачёта):</label>
       <input id="user" type="text" placeholder="anon" class="rounded-xl bg-slate-800/80 border border-slate-700 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500"/>
     </div>
 
-    <!-- Уровень 1: Base64 разминка -->
+    <!-- L1 -->
     <section id="level1" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-semibold">Уровень 1 — «Разминка» (Base64)</h2>
-          <p class="mt-1 text-slate-300">Перед вами строка в Base64. Декодируйте и введите флаг целиком (с фигурными скобками).</p>
-        </div>
-        <span class="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700">крипто/кодировки</span>
-      </div>
-      <div class="mt-4 p-4 rounded-xl bg-slate-800/70 font-mono text-slate-50 select-all overflow-x-auto">TUdLRUlUQ1RGe2hlbGxvX3dvcmxkfQ==</div>
+      <h2 class="text-2xl font-semibold">Уровень 1 — Base64</h2>
+      <p class="mt-1 text-slate-300">Декодируйте строку и введите флаг целиком.</p>
+      <div class="mt-4 p-4 rounded-xl bg-slate-800/70 font-mono select-all overflow-x-auto">TUdLRUlUQ1RGe2hlbGxvX3dvcmxkfQ==</div>
       <div class="mt-4 flex flex-col sm:flex-row gap-3">
         <input id="flag1" type="text" placeholder="MGKEITCTF{...}" class="w-full sm:flex-1 rounded-xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
         <button onclick="check(1)" class="rounded-xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
       </div>
       <p id="msg1" class="mt-3 text-sm"></p>
+      <div class="mt-4 hidden" id="next1">
+        <button onclick="goto(2)" class="rounded-xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Перейти на уровень 2 ↓</button>
+      </div>
     </section>
 
-    <!-- Уровень 2: Цезарь -->
-    <section id="level2" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/40 ">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-semibold">Уровень 2 — «Сдвиг Цезаря»</h2>
-          <p class="mt-1 text-slate-300">Ниже зашифрованное сообщение. Применён сдвиг <span class="font-semibold">+4</span> внутри фигурных скобок. Верните назад.</p>
-        </div>
-        <span class="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700">классические шифры</span>
-      </div>
-      <div class="mt-4 p-4 rounded-xl bg-slate-800/70 font-mono text-slate-50 overflow-x-auto">MGKEITCTF{jmb_xli_psmkmg}</div>
-      <details class="mt-3 text-slate-400">
-        <summary class="cursor-pointer hover:text-slate-200">Подсказка</summary>
-        <div class="mt-2 text-slate-300">Сдвиг назад на 4 позиции: a→w, b→x, c→y, d→z, e→a и т.д.</div>
-      </details>
+    <!-- L2 -->
+    <section id="level2" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/40 hidden">
+      <h2 class="text-2xl font-semibold">Уровень 2 — Сдвиг Цезаря</h2>
+      <p class="mt-1 text-slate-300">Внутри фигурных скобок применён сдвиг <strong>+4</strong>. Верните назад.</p>
+      <div class="mt-4 p-4 rounded-xl bg-slate-800/70 font-mono overflow-x-auto">MGKEITCTF{jmb_xli_psmkmg}</div>
+      <details class="mt-3 text-slate-400"><summary class="cursor-pointer hover:text-slate-200">Подсказка</summary><div class="mt-2 text-slate-300">a→w, b→x, c→y, d→z, e→a…</div></details>
       <div class="mt-4 flex flex-col sm:flex-row gap-3">
         <input id="flag2" type="text" placeholder="MGKEITCTF{...}" class="w-full sm:flex-1 rounded-xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
         <button onclick="check(2)" class="rounded-xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
       </div>
       <p id="msg2" class="mt-3 text-sm"></p>
+      <div class="mt-4 hidden" id="next2">
+        <button onclick="goto(3)" class="rounded-xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Перейти на уровень 3 ↓</button>
+      </div>
     </section>
 
-    <!-- Уровень 3: Поиск в коде/стилях -->
-    <section id="level3" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/20 ">
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h2 class="text-2xl font-semibold">Уровень 3 — «Поиск в коде» (инспектор)</h2>
-          <p class="mt-1 text-slate-300">Флаг спрятан частями в разметке и атрибутах. Но проверка — только на сервере.</p>
-        </div>
-        <span class="text-xs px-2 py-1 rounded bg-slate-800 border border-slate-700">web/debug</span>
-      </div>
-      <!-- Подсказки можно менять под мероприятие -->
-      <p class="mt-3 text-slate-300">Ищите кусочки в комментариях HTML, псевдо‑элементах и data‑атрибутах.</p>
-      <div class="mt-4 p-4 rounded-xl bg-slate-800/60 border border-slate-700">
-        <div class="text-lg">Где‑то здесь есть намёк…</div>
-      </div>
+    <!-- L3 -->
+    <section id="level3" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/20 hidden">
+      <h2 class="text-2xl font-semibold">Уровень 3 — Поиск в коде</h2>
+      <p class="mt-1 text-slate-300">Флаг спрятан в исходнике страницы / инспекторе. Найдите и введите.</p>
+      <!-- FULL FLAG FOR LEVEL 3: MGKEITCTF{web_warrior} -->
+      <div id="flag-explicit" data-flag="MGKEITCTF{web_warrior}" style="display:none" aria-hidden="true"></div>
+      <p style="display:none" id="flag-plain">MGKEITCTF{web_warrior}</p>
+
       <div class="mt-4 flex flex-col sm:flex-row gap-3">
         <input id="flag3" type="text" placeholder="MGKEITCTF{...}" class="w-full sm:flex-1 rounded-xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
         <button onclick="check(3)" class="rounded-xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
       </div>
       <p id="msg3" class="mt-3 text-sm"></p>
+      <div class="mt-4 hidden" id="next3">
+        <button onclick="celebrate()" class="rounded-xl px-5 py-3 bg-fuchsia-600 hover:bg-fuchsia-500">Ура! Что дальше?</button>
+      </div>
     </section>
 
+    <!-- Финал -->
     <section id="finish" class="card rounded-3xl border border-slate-800 p-8 bg-slate-900/30 hidden text-center">
-      <h2 class="text-3xl font-bold">Поздравляем! 🎉</h2>
-      <p class="mt-2 text-slate-300">Вы прошли все 3 уровня.</p>
+      <h2 class="text-3xl font-bold">Супер! Ты прошёл все уровни 🎉</h2>
+      <p class="mt-2 text-slate-300">Можешь перезагрузить страницу или вернуться к любому уровню через переключатели выше.</p>
       <div class="mt-4 flex justify-center gap-3">
         <button onclick="location.reload()" class="rounded-xl px-5 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700">Сбросить</button>
         <button onclick="spawnConfetti()" class="rounded-xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Ещё конфетти</button>
@@ -104,68 +96,60 @@
   </main>
 
   <footer class="max-w-5xl mx-auto px-4 pb-12 text-slate-400 text-sm">
-    <p>Организатор: чтобы сменить тексты/подсказки — правьте HTML. Проверка флагов — на сервере (Cloudflare Worker).</p>
+    <p>Организатор: все тексты можно править в HTML. Проверка флагов — через Cloudflare Worker.</p>
   </footer>
 
   <script>
-    // 1) Укажи URL воркера, который будет проверять флаги (мы дадим его в инструкции)
-    const CHECK_URL = "https://mgkeit-check.mokrushinaolllya.workers.dev"; // например: https://mgkeit-check.yourname.workers.dev/check
+    const CHECK_URL = "https://mgkeit-check.mokrushinaolllya.workers.dev";
 
-    function markStep(n, state) {
-      const el = document.getElementById('step' + n);
-      el.classList.remove('step-active','step-done');
-      if (state === 'active') el.classList.add('step-active');
-      if (state === 'done')   el.classList.add('step-done');
+    function markStepper(active) {
+      for (let i=1;i<=3;i++) {
+        const b = document.getElementById('stepBtn'+i);
+        b.classList.remove('step-active');
+      }
+      document.getElementById('stepBtn'+active).classList.add('step-active');
     }
 
-    function showLevel(n) {
-      for (let i=1;i<=3;i++) {
-        document.getElementById('level'+i).classList.add('hidden');
-      }
+    function goto(n) {
+      for (let i=1;i<=3;i++) document.getElementById('level'+i).classList.add('hidden');
       document.getElementById('level'+n).classList.remove('hidden');
-      for (let i=1;i< n;i++) markStep(i,'done');
-      markStep(n,'active');
-      for (let i=n+1;i<=3;i++) markStep(i,null);
+      markStepper(n);
+      window.scrollTo({ top: document.getElementById('level'+n).offsetTop - 20, behavior: 'smooth' });
     }
 
     async function check(n) {
       const inp = document.getElementById('flag'+n);
       const msg = document.getElementById('msg'+n);
-      const user = (document.getElementById('user')?.value || 'anon');
+      const user = document.getElementById('user').value || 'anon';
       msg.textContent = 'Проверяю…';
       msg.className = 'mt-3 text-sm text-slate-300';
-      fetch(CHECK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ flag: inp.value.trim(), level: n, user })
-      })
-      .then(r => r.json())
-      .then(data => {
+      try {
+        const res = await fetch(CHECK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ flag: inp.value.trim(), level: n, user }) });
+        const data = await res.json();
         if (data && data.ok) {
-          if (n === 1) {
-            msg.textContent = 'Молодец! Переходи на уровень 2 ↓';
-            msg.className = 'mt-3 text-sm text-emerald-400';
-            spawnConfetti();
-            document.getElementById('level2')?.scrollIntoView({behavior:'smooth'});
-          } else if (n === 2) {
-            msg.textContent = 'Отлично! Переходи на уровень 3 ↓';
-            msg.className = 'mt-3 text-sm text-emerald-400';
-            spawnConfetti();
-            document.getElementById('level3')?.scrollIntoView({behavior:'smooth'});
+          const texts = {1:'Молодец! Переходи на уровень 2 ↓', 2:'Отлично! Переходи на уровень 3 ↓', 3:'Супер! Ты прошёл все уровни 🎉'};
+          msg.textContent = texts[n];
+          msg.className = 'mt-3 text-sm text-emerald-400';
+          if (n < 3) {
+            document.getElementById('next'+n).classList.remove('hidden');
+            setTimeout(()=>goto(n+1), 900);
           } else {
-            msg.textContent = 'Супер! Ты прошёл все уровни 🎉';
-            msg.className = 'mt-3 text-sm text-emerald-400';
-            spawnConfetti();
+            document.getElementById('next3').classList.remove('hidden');
+            celebrate();
           }
         } else {
           msg.textContent = 'Неверно. Проверь формат и решение.';
           msg.className = 'mt-3 text-sm text-rose-400';
         }
-      })
-      .catch(() => {
+      } catch (e) {
         msg.textContent = 'Ошибка соединения с сервером проверки.';
         msg.className = 'mt-3 text-sm text-rose-400';
-      });
+      }
+    }
+
+    function celebrate(){
+      document.getElementById('finish').classList.remove('hidden');
+      spawnConfetti();
     }
 
     function spawnConfetti() {
@@ -182,7 +166,8 @@
       }
     }
 
-    
+    // старт с первого уровня
+    goto(1);
   </script>
 </body>
 </html>
