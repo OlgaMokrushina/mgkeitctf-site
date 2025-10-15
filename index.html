@@ -12,6 +12,18 @@
     .step-active { background: linear-gradient(90deg, #60a5fa, #a78bfa); color: #0b1220; font-weight: 700; }
     .confetti { position: fixed; top: -10px; width: 8px; height: 14px; opacity: .9; animation: fall linear forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: .95; } }
+      .fade { animation: fadeIn .35s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce){ .fade { animation: none !important; } }
+      /* Сообщения и инпуты: анимация/состояния */
+    .fade-msg { animation: fadeIn .25s ease-out both; }
+    input[id^="flag"] { transition: border-color .2s ease, background-position .2s ease; }
+    input[id^="flag"].ok { border-color: #10b981 !important; background-repeat: no-repeat; background-position: right .75rem center; padding-right: 2.5rem; background-size: 20px 20px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E"); }
+    input[id^="flag"].err { border-color: #f43f5e !important; }
+
+    .fade { animation: fadeIn .35s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce){ .fade, .fade-msg { animation: none !important; } }
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100">
@@ -111,20 +123,61 @@
     }
 
     function goto(n) {
-      for (let i=1;i<=3;i++) document.getElementById('level'+i).classList.add('hidden');
-      document.getElementById('level'+n).classList.remove('hidden');
+      for (let i = 1; i <= 3; i++) document.getElementById("level" + i).classList.add("hidden");
+      const sec = document.getElementById("level" + n);
+      sec.classList.remove("hidden");
+      sec.classList.add('fade');
+      sec.addEventListener('animationend', () => sec.classList.remove('fade'), { once: true });
       markStepper(n);
-      window.scrollTo({ top: document.getElementById('level'+n).offsetTop - 20, behavior: 'smooth' });
+      localStorage.setItem('currentLevel', String(n));
+      window.scrollTo({ top: sec.offsetTop - 20, behavior: "smooth" });
+    });
+      markStepper(n);
+      window.scrollTo({ top: sec.offsetTop - 20, behavior: "smooth" });
+    });
     }
 
     async function check(n) {
-      const inp = document.getElementById('flag'+n);
-      const msg = document.getElementById('msg'+n);
-      const user = document.getElementById('user').value || 'anon';
-      msg.textContent = 'Проверяю…';
-      msg.className = 'mt-3 text-sm text-slate-300';
+      const inp = document.getElementById("flag" + n);
+      const msg = document.getElementById("msg" + n);
+      const user = document.getElementById("user").value || "anon";
+      msg.textContent = "Проверяю…";
+      msg.className = "mt-3 text-sm text-slate-300 fade-msg";
       try {
-        const res = await fetch(CHECK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ flag: inp.value.trim(), level: n, user }) });
+        const res = await fetch(CHECK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ flag: inp.value.trim(), level: n, user })
+        });
+        const data = await res.json();
+        if (data && data.ok) {
+          inp.classList.remove('err');
+          inp.classList.add('ok');
+          const texts = {1:"Молодец! Переходи на уровень 2 ↓", 2:"Отлично! Переходи на уровень 3 ↓", 3:"Супер! Ты прошёл все уровни 🎉"};
+          msg.textContent = texts[n];
+          msg.className = "mt-3 text-sm text-emerald-400 fade-msg";
+          if (n < 3) {
+            document.getElementById("next" + n).classList.remove("hidden");
+            setTimeout(() => goto(n + 1), 1000);
+          } else {
+            document.getElementById("next3").classList.remove("hidden");
+            celebrate();
+          }
+        } else {
+          inp.classList.remove('ok');
+          inp.classList.add('err');
+          setTimeout(()=>inp.classList.remove('err'), 1200);
+          msg.textContent = "Неверно. Проверь формат и решение.";
+          msg.className = "mt-3 text-sm text-rose-400 fade-msg";
+        }
+      } catch {
+        inp.classList.remove('ok');
+        inp.classList.add('err');
+        setTimeout(()=>inp.classList.remove('err'), 1200);
+        msg.textContent = "Ошибка соединения с сервером проверки.";
+        msg.className = "mt-3 text-sm text-rose-400 fade-msg";
+      }
+    }, body: JSON.stringify({ flag: inp.value.trim(), level: n, user }) });
         const data = await res.json();
         if (data && data.ok) {
           const texts = {1:'Молодец! Переходи на уровень 2 ↓', 2:'Отлично! Переходи на уровень 3 ↓', 3:'Супер! Ты прошёл все уровни 🎉'};
@@ -167,7 +220,7 @@
     }
 
     // старт с первого уровня
-    goto(1);
+    const _saved = parseInt(localStorage.getItem('currentLevel')||'1',10); goto(isNaN(_saved)?1:_saved);
   </script>
 </body>
 </html>
