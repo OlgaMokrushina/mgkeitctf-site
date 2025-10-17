@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MGKEITCTF — 3 уровня (пошагово)</title>
+  <title>MGKEITCTF — мини-CTF (практика)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .card { box-shadow: 0 10px 30px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.06); }
@@ -13,7 +13,7 @@
     .confetti { position: fixed; top: -10px; width: 8px; height: 14px; opacity: .9; animation: fall linear forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: .95; } }
 
-    /* Сообщения/инпуты */
+    /* Анимации/состояния */
     .fade { animation: fadeIn .35s ease-out both; }
     .fade-msg { animation: fadeIn .25s ease-out both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -25,9 +25,18 @@
   </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100">
-  <header class="max-w-5xl mx-auto px-4 pt-10 pb-6">
+  <header class="max-w-5xl mx-auto px-4 pt-10 pb-4">
     <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — тренировочный мини-сайт</h1>
-    <p class="mt-3 text-slate-300">Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются по одному, проверка идёт на сервере.</p>
+
+    <!-- строка с описанием + кнопка Теория -->
+    <div class="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <p class="text-slate-300 text-sm">
+        Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются по одному, проверка идёт на сервере.
+      </p>
+      <a href="theory.html" class="inline-flex items-center bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-lg transition">
+        📘 Теория CTF
+      </a>
+    </div>
   </header>
 
   <!-- Степпер -->
@@ -82,7 +91,6 @@
       <p class="mt-1 text-slate-300">Флаг спрятан в исходнике страницы. Найдите и введите.</p>
       <!-- FULL FLAG FOR LEVEL 3: MGKEITCTF{web_warrior} -->
       <div id="flag-explicit" data-flag="MGKEITCTF{web_warrior}" style="display:none" aria-hidden="true"></div>
-
       <div class="mt-4 flex flex-col sm:flex-row gap-3">
         <input id="flag3" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
         <button type="button" data-check="3" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
@@ -187,7 +195,7 @@
 
     // === Инициализация
     document.addEventListener('DOMContentLoaded', () => {
-      // Отключаем историю/подсказки ЖЁСТКО
+      // Жёстко отключаем подсказки/историю ввода у всех текстовых полей
       const inputs = document.querySelectorAll('input[type="text"]');
       inputs.forEach((el, i) => {
         el.setAttribute('autocomplete','off');
@@ -199,7 +207,7 @@
         el.addEventListener('focus', () => setTimeout(()=>el.removeAttribute('readonly'), 0), { once:true });
       });
 
-      // Навешиваем обработчики (без inline-онкликов, чтобы не было конфликтов)
+      // Обработчики (без inline-онкликов)
       document.querySelectorAll('[data-step]').forEach(btn => btn.addEventListener('click', () => showLevel(+btn.dataset.step)));
       document.querySelectorAll('[data-go]').forEach(btn => btn.addEventListener('click', () => showLevel(+btn.dataset.go)));
       document.querySelectorAll('[data-check]').forEach(btn => btn.addEventListener('click', () => doCheck(+btn.dataset.check)));
