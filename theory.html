@@ -6,11 +6,12 @@
   <title>MGKEITCTF — Теория CTF</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    html { scroll-behavior: smooth; }
     .card {
-      box-shadow: 0 10px 30px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,.15), inset 0 0 0 1px rgba(255,255,255,.05);
       transition: transform .15s ease, box-shadow .2s ease;
     }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(99,102,241,.25); }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(99,102,241,.25); }
     .glow { text-shadow: 0 0 20px rgba(99,102,241,.45); }
     .fade { animation: fadeIn .4s ease-out both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: none;} }
@@ -19,7 +20,8 @@
 
 <body class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100">
 
-  <header class="max-w-5xl mx-auto px-4 pt-10 pb-4">
+  <!-- ШАПКА -->
+  <header class="max-w-5xl mx-auto px-4 pt-10 pb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — Теория CTF</h1>
       <a href="index.html" class="inline-flex items-center bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-lg transition">
@@ -27,114 +29,139 @@
       </a>
     </div>
     <p class="mt-2 text-slate-300 text-sm">
-      Основные направления и инструменты CTF: от кодирования и криптографии до веб-взлома и реверса.
+      Подробное учебное руководство по категориям CTF — с описаниями, примерами и инструментами.
     </p>
   </header>
 
-  <main class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+  <!-- ОГЛАВЛЕНИЕ -->
+  <nav class="max-w-5xl mx-auto px-4 pb-6">
+    <div class="grid sm:grid-cols-4 md:grid-cols-8 gap-3 text-center">
+      <a href="#intro" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">0. Введение</a>
+      <a href="#stego" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">1. Стеганография</a>
+      <a href="#forensics" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">2. Форензика</a>
+      <a href="#crypto" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">3. Криптография</a>
+      <a href="#osint" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">4. OSINT</a>
+      <a href="#web" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">5. Веб</a>
+      <a href="#prog" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">6. Программирование</a>
+      <a href="#reverse" class="bg-slate-800/60 hover:bg-indigo-700 py-2 rounded-lg text-sm transition">7. Реверс</a>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 py-6 space-y-8">
+
     <!-- 0 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/70 fade">
+    <section id="intro" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/70 fade">
       <h2 class="text-2xl font-semibold text-indigo-300 mb-2">0. Введение в CTF</h2>
       <p class="text-slate-300 mb-3">
-        Capture The Flag — соревнования по кибербезопасности, где участники ищут спрятанные флаги
-        формата <code class="bg-slate-800 px-1 rounded">MGKEITCTF{...}</code> в коде, файлах и сетевых данных.
+        Capture The Flag — это соревнования по кибербезопасности, где участники ищут флаги формата
+        <code class="bg-slate-800 px-1 rounded">MGKEITCTF{...}</code> в коде, файлах и сетевых данных.
+      </p>
+      <p class="text-slate-300 mb-3">
+        Каждая задача — мини-проект, который требует анализа, логики и экспериментов.  
+        Уровни сложности растут от простых до профессиональных.
       </p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li><b>Типы:</b> Jeopardy, Attack-Defence, Mixed.</li>
-        <li><b>Категории:</b> Crypto, Stego, Web, OSINT, Forensics, Reverse.</li>
+        <li><b>Типы CTF:</b> Jeopardy, Attack-Defence, Mixed.</li>
+        <li><b>Категории:</b> Crypto, Stego, Web, OSINT, Forensics, Reverse, Misc.</li>
       </ul>
-      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> CyberChef, VS Code, Wireshark, Binwalk, Python.</p>
+      <p class="mt-3 text-sm text-slate-400"><b>Инструменты новичка:</b> CyberChef, VS Code, Wireshark, Binwalk, Python.</p>
     </section>
 
     <!-- 1 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+    <section id="stego" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
       <h2 class="text-2xl font-semibold text-orange-300 mb-2">1. Стеганография</h2>
-      <p class="text-slate-300 mb-3">
-        Скрытие данных внутри других файлов: изображений, звука, видео и архивов.
-      </p>
+      <p class="text-slate-300 mb-3">Скрытие данных внутри изображений, аудио и других файлов.</p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Младшие биты (LSB) изображений.</li>
-        <li>Метаданные EXIF, IPTC.</li>
-        <li>Передача текста через аудио-спектр.</li>
+        <li>Изменение младших битов (LSB) изображения.</li>
+        <li>Метаданные EXIF: автор, координаты, устройство.</li>
+        <li>Передача текста через спектр звука или пиксели.</li>
       </ul>
+      <p class="mt-3 text-slate-300">Попробуй извлечь скрытый флаг из изображения или mp3-файла — он может быть в метаданных!</p>
       <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> exiftool, steghide, zsteg, binwalk, Sonic Visualiser.</p>
     </section>
 
     <!-- 2 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+    <section id="forensics" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
       <h2 class="text-2xl font-semibold text-pink-300 mb-2">2. Форензика</h2>
-      <p class="text-slate-300 mb-3">Анализ цифровых следов и восстановление удалённых данных.</p>
+      <p class="text-slate-300 mb-3">Поиск и восстановление данных, следов и артефактов в цифровой среде.</p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Разбор pcap-трафика и сетевых пакетов.</li>
-        <li>Поиск строк и флагов в бинарных файлах.</li>
-        <li>Анализ образов дисков и логов.</li>
+        <li>Анализ сетевых пакетов (.pcap) — Wireshark.</li>
+        <li>Извлечение строк и флагов из бинарных файлов (`strings`).</li>
+        <li>Работа с логами и дампами памяти.</li>
       </ul>
-      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Wireshark, strings, foremost, Autopsy, Volatility.</p>
+      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Wireshark, Autopsy, Volatility, strings, foremost.</p>
     </section>
 
     <!-- 3 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+    <section id="crypto" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
       <h2 class="text-2xl font-semibold text-yellow-300 mb-2">3. Криптография</h2>
-      <p class="text-slate-300 mb-3">Изучает шифрование и дешифрование сообщений — от простых замен до RSA.</p>
+      <p class="text-slate-300 mb-3">
+        Классические и современные методы шифрования.  
+        Цель — расшифровать или взломать код и получить флаг.
+      </p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Цезарь, Виженер, Атбаш, XOR, Base64.</li>
-        <li>Хэш-функции MD5, SHA-1, SHA-256.</li>
-        <li>RSA, публичные и приватные ключи.</li>
+        <li>Шифры Цезаря, Атбаш, Виженера, XOR, Base64.</li>
+        <li>Хэш-функции: MD5, SHA1, SHA256.</li>
+        <li>RSA — криптосистема с открытым ключом.</li>
       </ul>
       <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> CyberChef, dcode.fr, hashcat, Python.</p>
     </section>
 
     <!-- 4 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
-      <h2 class="text-2xl font-semibold text-green-300 mb-2">4. OSINT</h2>
-      <p class="text-slate-300 mb-3">Поиск информации в открытых источниках: соцсети, сайты, фото, метаданные.</p>
+    <section id="osint" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+      <h2 class="text-2xl font-semibold text-green-300 mb-2">4. OSINT (разведка по открытым источникам)</h2>
+      <p class="text-slate-300 mb-3">Использование общедоступных данных для поиска информации и флагов.</p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
         <li>Google Dorking: <code>site:mgkeit.ru filetype:pdf</code>.</li>
-        <li>Извлечение EXIF из изображений.</li>
-        <li>Геолокация и поиск по картам/изображениям.</li>
+        <li>Извлечение EXIF-данных (GPS, автор).</li>
+        <li>Поиск по изображениям (Google, Yandex, TinEye).</li>
       </ul>
-      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Exiftool, Google, Yandex Images, Shodan, TinEye.</p>
+      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Exiftool, Shodan, Hunter.io, Maltego, SpiderFoot.</p>
     </section>
 
     <!-- 5 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+    <section id="web" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
       <h2 class="text-2xl font-semibold text-blue-300 mb-2">5. Веб-технологии</h2>
-      <p class="text-slate-300 mb-3">Раздел про сайты, запросы и уязвимости веб-приложений.</p>
+      <p class="text-slate-300 mb-3">Раздел посвящён анализу сайтов и веб-приложений.</p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Поиск флагов в исходном коде (Ctrl + U).</li>
-        <li>SQL-инъекции, XSS, cookies, headers.</li>
-        <li>robots.txt и скрытые API-эндпоинты.</li>
+        <li>Просмотр исходного кода страницы (Ctrl+U).</li>
+        <li>SQL-инъекции, XSS, cookies и HTTP-заголовки.</li>
+        <li>robots.txt, sitemap.xml, скрытые API.</li>
       </ul>
-      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Burp Suite, DevTools, curl, Postman.</p>
+      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Burp Suite, DevTools, curl, Postman, OWASP ZAP.</p>
     </section>
 
     <!-- 6 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+    <section id="prog" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
       <h2 class="text-2xl font-semibold text-cyan-300 mb-2">6. Программирование</h2>
-      <p class="text-slate-300 mb-3">Автоматизация решений и написание утилит для анализа.</p>
+      <p class="text-slate-300 mb-3">Создание собственных скриптов для анализа, автоматизации и дешифрования.</p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Python для декодирования и XOR.</li>
-        <li>Bash-скрипты и обработка файлов.</li>
-        <li>Регулярные выражения, JSON, парсинг.</li>
+        <li>Python для кодировок, XOR и Base64.</li>
+        <li>Bash для пакетной обработки.</li>
+        <li>Использование requests и regex.</li>
       </ul>
-      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Python3, requests, re, base64, bash, jq.</p>
+      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Python3, re, base64, bash, jq, GitHub Copilot.</p>
     </section>
 
     <!-- 7 -->
-    <section class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
+    <section id="reverse" class="card rounded-3xl border border-slate-800 p-6 bg-slate-900/60 fade">
       <h2 class="text-2xl font-semibold text-fuchsia-300 mb-2">7. Реверс-инжиниринг</h2>
-      <p class="text-slate-300 mb-3">Изучение программ: как они проверяют флаг и что скрыто внутри кода.</p>
+      <p class="text-slate-300 mb-3">
+        Изучение внутренней логики программ, чтобы понять, как они проверяют флаг.
+      </p>
       <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Поиск строк сравнения флага.</li>
-        <li>Декомпиляция и анализ бинарей.</li>
-        <li>Работа с .exe, ELF, DLL, Python-байтами.</li>
+        <li>Поиск строк сравнения флага и функций проверки.</li>
+        <li>Декомпиляция, дизассемблирование, анализ кода.</li>
+        <li>Работа с .exe, ELF и Python-байткодом.</li>
       </ul>
-      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Ghidra, IDA Free, strings, radare2, dnSpy.</p>
+      <p class="mt-3 text-sm text-slate-400"><b>Инструменты:</b> Ghidra, IDA Free, radare2, dnSpy, strings.</p>
     </section>
+
   </main>
 
-  <footer class="max-w-5xl mx-auto px-4 pb-12 text-slate-400 text-sm">
-    <p>Материал мастер-класса «Поймай флаг: мини-CTF от MGKEIT». Оформлено в стиле основной практической страницы.</p>
+  <footer class="max-w-5xl mx-auto px-4 pb-12 text-slate-400 text-sm text-center">
+    <p>Мастер-класс «Поймай флаг: мини-CTF от MGKEIT» — обучающая часть. Все разделы кликабельны и доступны сверху.</p>
   </footer>
+
 </body>
 </html>
