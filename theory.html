@@ -8,12 +8,12 @@
 
   <style>
     html { scroll-behavior: smooth; }
-
     body {
       background: radial-gradient(circle at 20% 20%, #141e3c 0%, #0a0f1e 70%);
       color: #e5e7eb;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto;
-      overflow-x: hidden;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
     .neon-text {
@@ -29,90 +29,91 @@
       box-shadow: 0 0 16px rgba(99, 102, 241, 0.45);
       transition: transform 0.2s ease, box-shadow 0.25s ease;
       text-decoration: none;
+      display: inline-flex;
+      gap: .5rem;
+      align-items: center;
     }
+    .neon-link:hover { transform: translateY(-1px) scale(1.03); }
 
-    .neon-link:hover {
-      transform: translateY(-1px) scale(1.03);
-      box-shadow: 0 0 28px rgba(139, 92, 246, 0.6),
-                  0 0 20px rgba(59, 130, 246, 0.4);
-    }
-
-    /* навигация */
+    /* Навигация - "чипы" */
     .nav-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       height: 3rem;
-      min-width: 9rem;
+      min-width: 10rem;
       padding: 0 1rem;
       color: #e2e8f0;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.95rem;
       text-decoration: none;
-      background: rgba(17, 24, 39, 0.75);
-      border: 1px solid rgba(99, 102, 241, 0.3);
+      background: rgba(17,24,39,0.78);
+      border: 1px solid rgba(99,102,241,0.28);
       border-radius: 0.9rem;
-      box-shadow: inset 0 0 6px rgba(99, 102, 241, 0.25),
-                  0 0 8px rgba(59, 130, 246, 0.2);
+      box-shadow: inset 0 0 6px rgba(99,102,241,0.2), 0 0 8px rgba(59,130,246,0.12);
       backdrop-filter: blur(6px);
-      transition: all 0.25s ease;
+      transition: all 0.22s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-
     .nav-btn:hover {
       color: #fff;
-      background: rgba(99, 102, 241, 0.35);
-      box-shadow: 0 0 14px rgba(99, 102, 241, 0.7),
-                  0 0 24px rgba(139, 92, 246, 0.5);
-      transform: translateY(-2px);
+      background: rgba(99,102,241,0.35);
+      box-shadow: 0 0 16px rgba(99,102,241,0.7), 0 0 26px rgba(139,92,246,0.45);
+      transform: translateY(-3px);
     }
-
     .nav-btn.active {
-      background: linear-gradient(90deg, rgba(99,102,241,0.9), rgba(139,92,246,0.9));
+      background: linear-gradient(90deg, rgba(99,102,241,0.95), rgba(139,92,246,0.95));
       color: #0b1022;
-      font-weight: 600;
-      box-shadow: 0 0 20px rgba(99,102,241,.8),
-                  0 0 36px rgba(139,92,246,.6);
+      box-shadow: 0 0 22px rgba(99,102,241,0.9), 0 0 36px rgba(139,92,246,0.6);
       transform: scale(1.03);
     }
 
+    /* Карточки разделов */
     .neon-card {
-      background: rgba(10, 15, 30, 0.72);
-      border: 1px solid rgba(99, 102, 241, 0.28);
+      background: rgba(10,15,30,0.74);
+      border: 1px solid rgba(99,102,241,0.18);
       border-radius: 1.25rem;
-      box-shadow: 0 0 14px rgba(59, 130, 246, 0.22);
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6), inset 0 0 8px rgba(99,102,241,0.03);
+      transition: transform .18s ease, box-shadow .24s ease;
     }
+    .neon-card:hover { transform: translateY(-3px); box-shadow: 0 12px 38px rgba(99,102,241,0.24); }
 
-    .neon-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 22px rgba(99, 102, 241, 0.55),
-                  0 0 36px rgba(139, 92, 246, 0.35);
-    }
+    .section-title { font-size: 1.5rem; font-weight:700; margin-bottom: .5rem; }
 
-    .fade { animation: fadeIn 0.55s ease-out both; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: none; }
+    .kbd { background:#0b1220; border:1px solid rgba(255,255,255,.03); padding:.12rem .5rem; border-radius:.35rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    .fade { animation: fadeIn .5s ease both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px);} to { opacity: 1; transform: none; } }
+
+    /* адаптивные отступы для читаемости */
+    main { padding-bottom: 5rem; }
+    @media (max-width:640px) {
+      .nav-btn { min-width: 7.4rem; font-size: .86rem; height: 2.8rem; }
+      .section-title { font-size: 1.25rem; }
     }
   </style>
 </head>
+<body>
 
-<body class="min-h-screen">
-
-  <!-- Шапка -->
+  <!-- HEADER -->
   <header class="max-w-5xl mx-auto px-4 pt-10 pb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <h1 class="text-3xl md:text-4xl font-extrabold neon-text">
-        MGKEITCTF — Теория CTF
-      </h1>
-      <a href="index.html" class="neon-link text-sm">⚡ Практика (мини-CTF)</a>
+      <div>
+        <h1 class="text-3xl md:text-4xl neon-text font-extrabold">MGKEITCTF — Теория CTF</h1>
+        <p class="mt-2 text-slate-300 text-sm max-w-2xl">
+          Полный справочник по категориям CTF: от основ до практических инструментов и приёмов.
+        </p>
+      </div>
+
+      <div class="flex gap-2 items-center">
+        <a class="neon-link" href="index.html" title="Перейти к практике">⚡ Практика (мини-CTF)</a>
+      </div>
     </div>
-    <p class="mt-2 text-slate-300 text-sm">
-      Теоретическая база по категориям CTF: крипто, стего, веб, forensics, OSINT, программирование и реверс.
-    </p>
   </header>
 
-  <!-- Навигация -->
+  <!-- NAV -->
   <nav class="max-w-5xl mx-auto px-4 pb-6">
     <div class="flex flex-wrap justify-center gap-3">
       <a href="#intro"     class="nav-btn" id="nav-intro">Введение</a>
@@ -126,111 +127,189 @@
     </div>
   </nav>
 
-  <!-- Контент -->
-  <main class="max-w-5xl mx-auto px-4 pb-14 space-y-10">
+  <!-- MAIN CONTENT (полный текст теории) -->
+  <main class="max-w-5xl mx-auto px-4 space-y-8">
 
+    <!-- Введение -->
     <section id="intro" class="neon-card p-6 fade">
-      <h2 class="text-indigo-300 text-2xl font-semibold mb-2">Введение</h2>
+      <h2 class="section-title text-indigo-300">Введение</h2>
       <p class="text-slate-300 mb-3">
-        Capture The Flag — соревнования по кибербезопасности. Цель — найти флаги формата
-        <code class="bg-slate-800/80 px-1 rounded">MGKEITCTF{...}</code>.
+        <strong>Capture The Flag</strong> — соревнования по кибербезопасности, где участники ищут флаги формата
+        <span class="kbd">MGKEITCTF{...}</span>. Задачи бывают разного типа и направленности: от простых головоломок до реальных уязвимостей.
       </p>
-      <ul class="list-disc ml-5 space-y-1 text-slate-300">
-        <li>Типы CTF: Jeopardy, Attack-Defence, Mixed.</li>
-        <li>Категории: Crypto, Stego, Web, OSINT, Forensics, Reverse, Misc.</li>
-        <li>Инструменты: CyberChef, Wireshark, Binwalk, Python, VS Code.</li>
+
+      <h3 class="text-slate-200 font-semibold mt-4 mb-2">Типы CTF</h3>
+      <ul class="list-disc ml-5 text-slate-300 space-y-1">
+        <li><b>Jeopardy</b> — набор задач по категориям; команды решают независимые задания и получают баллы.</li>
+        <li><b>Attack-Defence</b> — команды оперируют сервисами, защищают свои и атакуют чужие.</li>
+        <li><b>Mixed</b> — гибриды, комбинирующие оба формата.</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-4 mb-2">Категории</h3>
+      <p class="text-slate-300">Основные направления задач: <em>Crypto, Stego, Web, OSINT, Forensics, Reverse, Misc</em>.</p>
+
+      <h3 class="text-slate-200 font-semibold mt-4 mb-2">Инструменты для старта</h3>
+      <p class="text-slate-300">Рекомендуется знать и иметь под рукой: <span class="kbd">CyberChef</span>, <span class="kbd">Wireshark</span>, <span class="kbd">Binwalk</span>, <span class="kbd">Python</span>, <span class="kbd">VS Code</span>.</p>
     </section>
 
+    <!-- Стеганография -->
     <section id="stego" class="neon-card p-6 fade">
-      <h2 class="text-orange-300 text-2xl font-semibold mb-2">Стеганография</h2>
+      <h2 class="section-title text-orange-300">Стеганография</h2>
+
       <p class="text-slate-300 mb-3">
-        Скрытие информации в других данных — изображениях, аудио или видео.
+        Стеганография — искусство скрывать данные внутри других файлов (изображений, аудио, видео, документов). В CTF часто флаги спрятаны именно так.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Популярные техники</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>LSB в изображениях, метаданные EXIF, скрытые ZIP внутри PNG.</li>
-        <li>Текст в звуке или визуализациях спектра.</li>
-        <li>Инструменты: exiftool, zsteg, steghide, binwalk.</li>
+        <li><b>LSB (Least Significant Bit)</b> — изменение младших битов пикселей в изображениях. Визуально почти незаметно.</li>
+        <li><b>Метаданные (EXIF/IPTC)</b> — флаги и подсказки могут храниться в полях камеры, GPS и пр.</li>
+        <li><b>Скрытые архивы</b> — ZIP/TAR, спрятанные внутри PNG/JPG (concatenate файлы или добавить данные после EOF).</li>
+        <li><b>Аудио-стреганография</b> — внедрение сигнала в спектр или LSB аудиосэмплов; визуализация спектра может показать скрытый текст.</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-4 mb-2">Как искать</h3>
+      <ol class="list-decimal ml-5 text-slate-300 space-y-1">
+        <li>Проверь EXIF: <code class="kbd">exiftool file.jpg</code>.</li>
+        <li>Посмотри байты в hex: <code class="kbd">xxd file.png | less</code>.</li>
+        <li>Проверь на наличие ZIP: <code class="kbd">binwalk -e file.png</code> или просто <code class="kbd">strings file | grep MGKEITCTF</code>.</li>
+        <li>Покажи спектр аудио в Sonic Visualiser / Audacity.</li>
+      </ol>
+
+      <h3 class="text-slate-200 font-semibold mt-4 mb-2">Инструменты</h3>
+      <p class="text-slate-300">exiftool, steghide, zsteg, binwalk, Sonic Visualiser, strings.</p>
     </section>
 
+    <!-- Форензика -->
     <section id="forensics" class="neon-card p-6 fade">
-      <h2 class="text-pink-300 text-2xl font-semibold mb-2">Форензика</h2>
+      <h2 class="section-title text-pink-300">Форензика</h2>
+
       <p class="text-slate-300 mb-3">
-        Поиск данных в трафике, логах и образах. Извлечение флагов и артефактов.
+        Цифровая криминалистика — поиск и восстановление данных в файлах, образах и трафике. Часто флаг можно извлечь из сетевого дампа или образа диска.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Частые задачи</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>PCAP-анализ в Wireshark, извлечение файлов, reconstruction streams.</li>
-        <li>strings, grep, восстановление удалённого.</li>
-        <li>Инструменты: Wireshark, Autopsy, Volatility, foremost.</li>
+        <li>Анализ PCAP: извлечение HTTP-стримов, файлов, паролей. В Wireshark есть удобные фильтры.</li>
+        <li>Поиск строк в бинарях: <code class="kbd">strings file | grep MGKEITCTF</code>.</li>
+        <li>Восстановление удалённых файлов с помощью carving (foremost, scalpel).</li>
+        <li>Анализ дампов памяти и логов (Volatility для памяти).</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Инструменты</h3>
+      <p class="text-slate-300">Wireshark, Autopsy, Volatility, foremost, strings, grep.</p>
     </section>
 
+    <!-- Криптография -->
     <section id="crypto" class="neon-card p-6 fade">
-      <h2 class="text-yellow-300 text-2xl font-semibold mb-2">Криптография</h2>
+      <h2 class="section-title text-yellow-300">Криптография</h2>
+
       <p class="text-slate-300 mb-3">
-        От Цезаря до RSA. Распознавание шифров и кодировок.
+        От простых замен до современных алгоритмов — в CTF часто встречаются задания на распознавание и взлом шифров.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Что важно понимать</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>Base64 — кодирование, ROT13, XOR, Виженер.</li>
-        <li>MD5, SHA256 — хэши. Слабые ключи RSA.</li>
-        <li>Инструменты: CyberChef, hashcat, dcode.fr, Python.</li>
+        <li><b>Base64</b> — это не шифрование, а кодирование: его легко декодировать.</li>
+        <li><b>ROT / Caesar</b> — простые сдвиги по алфавиту; часто встречается ROT13/ROTN.</li>
+        <li><b>XOR</b> — частый простой "шифр"; односимвольный XOR ломается перебором, повторяющийся — частотным анализом.</li>
+        <li><b>Виженер</b> — полиялфавитный шифр; для него применимы атаки автокорреляции и Kasiski.</li>
+        <li><b>Хэши</b> — MD5, SHA: хеши нельзя "декодировать", но можно брутфорсить или использовать радужные таблицы.</li>
+        <li><b>RSA</b> — в CTF часто учат находить слабые ключи (малые e, общая модульность, факторизация при маленьких p/q).</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Инструменты</h3>
+      <p class="text-slate-300">CyberChef, dcode.fr, hashcat, Python (библиотеки base64, Crypto, PyCryptoDome).</p>
     </section>
 
+    <!-- OSINT -->
     <section id="osint" class="neon-card p-6 fade">
-      <h2 class="text-green-300 text-2xl font-semibold mb-2">OSINT</h2>
+      <h2 class="section-title text-green-300">OSINT</h2>
+
       <p class="text-slate-300 mb-3">
-        Разведка по открытым источникам: соцсети, сайты, фото, домены.
+        OSINT — разведка по открытым источникам: поиск информации в публичных данных, соцсетях, веб-архивах и метаданных.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Практические приёмы</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>Google Dorks, EXIF-метаданные, Shodan, TinEye.</li>
-        <li>Инструменты: Exiftool, Shodan, SpiderFoot, theHarvester.</li>
+        <li>Google Dorking: уточнённые запросы (<code class="kbd">site: example.com filetype:pdf</code>).</li>
+        <li>Поиск по изображению: Google Images, Yandex, TinEye — для нахождения источника фото.</li>
+        <li>Извлечение EXIF (GPS, модель камеры): <code class="kbd">exiftool photo.jpg</code>.</li>
+        <li>Сканирование публичной инфраструктуры: Shodan, Censys.</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Инструменты</h3>
+      <p class="text-slate-300">Exiftool, Shodan, SpiderFoot, theHarvester, TinEye, Google/Yandex.</p>
     </section>
 
+    <!-- Веб -->
     <section id="web" class="neon-card p-6 fade">
-      <h2 class="text-blue-300 text-2xl font-semibold mb-2">Веб</h2>
+      <h2 class="section-title text-blue-300">Веб</h2>
+
       <p class="text-slate-300 mb-3">
-        Уязвимости веб-приложений и анализ HTTP.
+        Задачи про сайты и API: поиск флагов в исходном коде, эксплуатация уязвимостей и работа с HTTP.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Частые темы</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>Просмотр исходника (Ctrl+U), DevTools, cookies, robots.txt.</li>
-        <li>SQL-инъекции, XSS, CORS.</li>
-        <li>Инструменты: Burp Suite, Postman, OWASP ZAP.</li>
+        <li>Просмотр исходного кода (Ctrl+U), анализ скриптов в DevTools.</li>
+        <li>robots.txt / sitemap.xml — иногда содержат подсказки или ссылки на скрытые страницы.</li>
+        <li>SQL-инъекции, XSS — изучить параметры, формы и взаимодействие с сервером.</li>
+        <li>CORS / авторизация / JWT — уязвимости в логике аутентификации.</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Инструменты</h3>
+      <p class="text-slate-300">DevTools, curl, Postman, Burp Suite, OWASP ZAP.</p>
     </section>
 
+    <!-- Программирование -->
     <section id="prog" class="neon-card p-6 fade">
-      <h2 class="text-cyan-300 text-2xl font-semibold mb-2">Программирование</h2>
+      <h2 class="section-title text-cyan-300">Программирование</h2>
+
       <p class="text-slate-300 mb-3">
-        Скрипты для автоматизации, парсинг данных, анализ алгоритмов.
+        Сценарии и скрипты сильно ускоряют решение задач: автоматический перебор, парсинг результатов, преобразование данных.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Часто применяемое</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>Python, Bash, регулярные выражения, requests.</li>
-        <li>Инструменты: Python3, jq, Node.js.</li>
+        <li>Python: библиотеки <code class="kbd">requests</code>, <code class="kbd">re</code>, <code class="kbd">base64</code>, itertools.</li>
+        <li>Bash: комбинирование <code class="kbd">grep/sed/awk</code>, <code class="kbd">jq</code> для JSON.</li>
+        <li>Автоматизация bruteforce и обработка больших объёмов данных.</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Инструменты</h3>
+      <p class="text-slate-300">Python3, jq, Node.js (по желанию), Git для версионности скриптов.</p>
     </section>
 
+    <!-- Реверс -->
     <section id="reverse" class="neon-card p-6 fade">
-      <h2 class="text-fuchsia-300 text-2xl font-semibold mb-2">Реверс</h2>
+      <h2 class="section-title text-fuchsia-300">Реверс</h2>
+
       <p class="text-slate-300 mb-3">
-        Анализ программ, поиск проверки флага, дизассемблирование.
+        Реверс-инжиниринг — изучение исполняемых программ, поиск алгоритмов проверки флага и слабых мест.
       </p>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Методы</h3>
       <ul class="list-disc ml-5 text-slate-300 space-y-1">
-        <li>strings, Ghidra, IDA, dnSpy, radare2.</li>
+        <li>Поиск строк и проверок с помощью <code class="kbd">strings</code> и grepping.</li>
+        <li>Дизассемблирование и декомпиляция (Ghidra, IDA) — чтобы найти функцию сравнения флага.</li>
+        <li>Работа с байт-кодом Python (.pyc), .NET (dnSpy) и нативными ELF/PE.</li>
       </ul>
+
+      <h3 class="text-slate-200 font-semibold mt-3 mb-2">Инструменты</h3>
+      <p class="text-slate-300">Ghidra, IDA Free, radare2, dnSpy, strings.</p>
     </section>
 
   </main>
 
-  <footer class="max-w-5xl mx-auto px-4 pb-10 text-center text-slate-400 text-sm">
-    Мастер-класс «Поймай флаг». Теория оформлена в неон-стиле.
+  <footer class="max-w-5xl mx-auto px-4 pb-12 text-center text-slate-400 text-sm">
+    <p>Материал: мастер-класс «Поймай флаг: мини-CTF от MGKEIT». Используйте разделы как справочник во время практики.</p>
   </footer>
 
-  <!-- JS: Подсветка активной кнопки -->
+  <!-- JS: подсветка активной кнопки навигации при прокрутке -->
   <script>
-    const sections = [
+    // список секций и id навигационных кнопок
+    const mapping = [
       ['intro','nav-intro'],
       ['stego','nav-stego'],
       ['forensics','nav-forensics'],
@@ -240,18 +319,39 @@
       ['prog','nav-prog'],
       ['reverse','nav-reverse'],
     ];
-    const navEls = Object.fromEntries(sections.map(([id,nav]) => [id, document.getElementById(nav)]));
 
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          Object.values(navEls).forEach(el=>el.classList.remove('active'));
-          navEls[e.target.id]?.classList.add('active');
+    // удобный объект navId => element
+    const navMap = Object.fromEntries(mapping.map(([sec, nav]) => [sec, document.getElementById(nav)]));
+
+    // IntersectionObserver для подсветки текущей секции
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          // снять актив с всех
+          Object.values(navMap).forEach(el => el && el.classList.remove('active'));
+          const id = e.target.id;
+          if (navMap[id]) {
+            navMap[id].classList.add('active');
+            // прокрутить оглавление, если не видно (на маленьких экранах)
+            navMap[id].scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'});
+          }
         }
       });
-    }, { root:null, rootMargin:'-40% 0px -50% 0px', threshold:0.01 });
+    }, { root: null, rootMargin: '-40% 0px -50% 0px', threshold: 0.02 });
 
-    sections.forEach(([id])=>io.observe(document.getElementById(id)));
+    // запустить наблюдение за секциями
+    mapping.forEach(([sec]) => {
+      const el = document.getElementById(sec);
+      if (el) io.observe(el);
+    });
+
+    // сделать клики мгновенно плавными (возможность подправить офсет)
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (ev) => {
+        // стандартный smooth уже включён через CSS, но при необходимости можно кастомизировать
+        // ev.preventDefault(); // не отменяем — оставим стандартный поведение
+      });
+    });
   </script>
 
 </body>
