@@ -1,397 +1,306 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MGKEITCTF — Практика</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body{background:radial-gradient(circle at 20% 20%, #141e3c 0%, #0a0f1e 70%); color:#e5e7eb; font-family:Inter, system-ui,-apple-system,Segoe UI,Roboto;}
-    .card{background:rgba(10,15,30,.72); border:1px solid rgba(99,102,241,.18); border-radius:1.25rem; box-shadow:0 8px 30px rgba(2,6,23,.6), inset 0 0 8px rgba(99,102,241,.03);}
-    .step{background:#0b1220; border:1px solid #1f2a44; transition:transform .15s, box-shadow .15s;}
-    .step-active{background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#0b1220; font-weight:700; box-shadow:0 0 20px rgba(99,102,241,.45); transform:scale(1.02);}
-    .glow{ text-shadow:0 0 20px rgba(99,102,241,.45); }
-    input.flag{transition:border-color .2s, background-position .2s;}
-    input.flag.ok{border-color:#10b981!important; background-repeat:no-repeat; background-position:right .75rem center; padding-right:2.5rem; background-size:20px 20px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");}
-    input.flag.err{border-color:#f43f5e!important;}
-    .confetti{position:fixed; top:-10px; width:8px; height:14px; opacity:.9; animation:fall linear forwards;}
-    @keyframes fall{to{transform:translateY(110vh) rotate(360deg); opacity:.95}}
-  </style>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>MGKEITCTF — Практика</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+ <style>
+   body{background:radial-gradient(circle at 20% 20%, #141e3c 0%, #0a0f1e 70%); color:#e5e7eb; font-family:Inter, system-ui,-apple-system,Segoe UI,Roboto;}
+   .card{background:rgba(10,15,30,.72); border:1px solid rgba(99,102,241,.18); border-radius:1.25rem; box-shadow:0 8px 30px rgba(2,6,23,.6), inset 0 0 8px rgba(99,102,241,.03);}
+   .step{background:#0b1220; border:1px solid #1f2a44; transition:transform .15s, box-shadow .15s;}
+   .step-active{background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#0b1220; font-weight:700; box-shadow:0 0 20px rgba(99,102,241,.45); transform:scale(1.02);}
+   .glow{ text-shadow:0 0 20px rgba(99,102,241,.45); }
+   input.flag{transition:border-color .2s, background-position .2s;}
+   input.flag.ok{border-color:#10b981!important; background-repeat:no-repeat; background-position:right .75rem center; padding-right:2.5rem; background-size:20px 20px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");}
+   input.flag.err{border-color:#f43f5e!important;}
+   .confetti{position:fixed; top:-10px; width:8px; height:14px; opacity:.9; animation:fall linear forwards;}
+   @keyframes fall{to{transform:translateY(110vh) rotate(360deg); opacity:.95}}
+ </style>
 </head>
 <body>
-
+ 
 <!-- Sticky top bar -->
 <div class="fixed inset-x-0 top-0 z-40 backdrop-blur bg-slate-900/60 border-b border-slate-800">
-  <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-    <div class="font-semibold">MGKEITCTF</div>
-    <div class="flex gap-2">
-      <a href="theory.html" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500">📘 Теория</a>
-      <a href="index.html" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700">⚡ Практика</a>
-    </div>
-  </div>
+ <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+   <div class="font-semibold">MGKEITCTF</div>
+   <div class="flex gap-2">
+     <a href="theory.html" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500">📘 Теория</a>
+     <a href="index.html" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700">⚡ Практика</a>
+   </div>
+ </div>
 </div>
 <div style="height:56px"></div>
-
+ 
 <header class="max-w-5xl mx-auto px-4 pt-8 pb-2">
-  <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — тренировочный мини-сайт</h1>
-  <div class="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-    <p class="text-slate-300 text-sm">
-      Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются по одному, проверка — локальная.
-    </p>
-    <a href="theory.html" class="inline-flex items-center bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-lg transition">
-      📘 Теория CTF
-    </a>
-  </div>
+ <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — тренировочный мини-сайт</h1>
+ <div class="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+   <p class="text-slate-300 text-sm">
+     Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются по одному, проверка — на сервере.
+   </p>
+   <a href="theory.html" class="inline-flex items-center bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-lg transition">
+     📘 Теория CTF
+   </a>
+ </div>
 </header>
-
+ 
 <!-- Stepper -->
 <section class="max-w-5xl mx-auto px-4">
-  <div class="grid grid-cols-3 gap-3">
-    <button type="button" data-step="1" id="stepBtn1" class="step rounded-2xl p-3 text-center">Уровень 1</button>
-    <button type="button" data-step="2" id="stepBtn2" class="step rounded-2xl p-3 text-center">Уровень 2</button>
-    <button type="button" data-step="3" id="stepBtn3" class="step rounded-2xl p-3 text-center">Уровень 3</button>
-  </div>
+ <div class="grid grid-cols-3 gap-3">
+   <button type="button" data-step="1" id="stepBtn1" class="step rounded-2xl p-3 text-center">Уровень 1</button>
+   <button type="button" data-step="2" id="stepBtn2" class="step rounded-2xl p-3 text-center">Уровень 2</button>
+   <button type="button" data-step="3" id="stepBtn3" class="step rounded-2xl p-3 text-center">Уровень 3</button>
+ </div>
 </section>
-
+ 
 <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
-  <div class="flex gap-3 items-end">
-    <label class="text-sm text-slate-300">Ник/ФИО (для зачёта):</label>
-    <input id="user" type="text" placeholder="anon" class="rounded-2xl bg-slate-800/80 border border-slate-700 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
-  </div>
-
-  <!-- Level 1 -->
-  <section id="level1" class="card p-6">
-    <h2 class="text-2xl font-semibold">Уровень 1 — Base64</h2>
-    <p class="mt-1 text-slate-300">Декодируйте строку и введите флаг целиком.</p>
-    <div class="mt-4 p-4 rounded-xl bg-slate-900/70 font-mono overflow-x-auto">TUdLRUlUQ1RGe2hlbGxvX3dvcmxkfQ==</div>
-    <div class="mt-4 flex flex-col sm:flex-row gap-3">
-      <input id="flag1" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
-      <button type="button" data-check="1" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
-    </div>
-    <p id="msg1" class="mt-3 text-sm"></p>
-    <div class="mt-4 hidden" id="next1">
-      <button type="button" data-go="2" class="rounded-2xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Перейти на уровень 2 ↓</button>
-    </div>
-  </section>
-
-  <!-- Level 2 -->
-  <section id="level2" class="card p-6 hidden">
-    <h2 class="text-2xl font-semibold">Уровень 2 — Сдвиг Цезаря</h2>
-    <p class="mt-1 text-slate-300">Внутри фигурных скобок применён сдвиг <strong>+4</strong>. Верните назад.</p>
-    <div class="mt-4 p-4 rounded-xl bg-slate-900/70 font-mono overflow-x-auto">MGKEITCTF{jmb_xli_psmkmg}</div>
-    <details class="mt-3 text-slate-400"><summary class="cursor-pointer hover:text-slate-200">Подсказка</summary><div class="mt-2 text-slate-300">a→w, b→x, c→y, d→z, e→a…</div></details>
-    <div class="mt-4 flex flex-col sm:flex-row gap-3">
-      <input id="flag2" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
-      <button type="button" data-check="2" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
-    </div>
-    <p id="msg2" class="mt-3 text-sm"></p>
-    <div class="mt-4 hidden" id="next2">
-      <button type="button" data-go="3" class="rounded-2xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Перейти на уровень 3 ↓</button>
-    </div>
-  </section>
-
-  <!-- Level 3 -->
-  <section id="level3" class="card p-6 hidden">
-    <h2 class="text-2xl font-semibold">Уровень 3 — Поиск в коде</h2>
-    <p class="mt-1 text-slate-300">Флаг спрятан в исходнике страницы. Найдите и введите.</p>
-    
-    <!-- Ссылка для скачивания исходного кода -->
-    <div class="mt-4 p-4 rounded-xl bg-slate-900/70">
-      <p class="text-slate-300 mb-2">Скачайте исходный код страницы для анализа:</p>
-      <a href="page-source.txt" download class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg transition">
-        📥 Скачать page-source.txt
-      </a>
-    </div>
-    
-    <!-- FULL FLAG FOR LEVEL 3: MGKEITCTF{web_warrior} -->
-    <div id="flag-explicit" data-flag="MGKEITCTF{web_warrior}" style="display:none" aria-hidden="true"></div>
-    <div class="mt-4 flex flex-col sm:flex-row gap-3">
-      <input id="flag3" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
-      <button type="button" data-check="3" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
-    </div>
-    <p id="msg3" class="mt-3 text-sm"></p>
-    <div class="mt-4 hidden" id="next3">
-      <button type="button" id="celebrateBtn" class="rounded-2xl px-5 py-3 bg-fuchsia-600 hover:bg-fuchsia-500">Ура! Что дальше?</button>
-    </div>
-  </section>
-
-  <!-- Ачивки -->
-  <section class="max-w-5xl mx-auto">
-    <div id="badges" class="flex flex-wrap gap-3"></div>
-  </section>
-
-  <!-- Быстрые инструменты -->
-  <section class="card p-6">
-    <h3 class="text-xl font-semibold mb-4">🛠 Быстрые инструменты</h3>
-    <div class="grid md:grid-cols-3 gap-4">
-      <!-- Base64 -->
-      <div class="rounded-xl border border-slate-800 p-4 bg-slate-900/60">
-        <div class="font-medium mb-2">Base64</div>
-        <textarea id="b64in" class="w-full h-24 rounded-lg bg-slate-800 border border-slate-700 p-2 font-mono" placeholder="Текст или base64"></textarea>
-        <div class="mt-2 flex gap-2">
-          <button onclick="b64d()" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Декод</button>
-          <button onclick="b64e()" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Код</button>
-          <button onclick="copyTxt('#b64in')" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">⧉</button>
-        </div>
-      </div>
-      <!-- Caesar -->
-      <div class="rounded-xl border border-slate-800 p-4 bg-slate-900/60">
-        <div class="font-medium mb-2">Сдвиг Цезаря</div>
-        <input id="czshift" type="number" value="4" class="w-20 rounded bg-slate-800 border border-slate-700 p-2 mr-2"> 
-        <textarea id="czin" class="w-full h-24 rounded-lg bg-slate-800 border border-slate-700 p-2 font-mono" placeholder="Текст..."></textarea>
-        <div class="mt-2 flex gap-2">
-          <button onclick="cz(-1)" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Декр.</button>
-          <button onclick="cz(1)"  class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Инкр.</button>
-          <button onclick="copyTxt('#czin')" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">⧉</button>
-        </div>
-      </div>
-      <!-- Hash -->
-      <div class="rounded-xl border border-slate-800 p-4 bg-slate-900/60">
-        <div class="font-medium mb-2">SHA-256 Hash</div>
-        <textarea id="hbin" class="w-full h-24 rounded-lg bg-slate-800 border border-slate-700 p-2 font-mono" placeholder="Текст..."></textarea>
-        <div class="mt-2 flex gap-2">
-          <button onclick="sha256btn()" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Хэш</button>
-          <button onclick="copyTxt('#hbin')" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">⧉</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Финал + лидерборд -->
-  <section id="finish" class="card p-8 hidden text-center">
-    <h2 class="text-3xl font-bold">Супер! Ты прошёл все уровни 🎉</h2>
-    <p class="mt-2 text-slate-300">Можно перезагрузить страницу или вернуться к любому уровню выше.</p>
-    <div class="mt-4 flex justify-center gap-3">
-      <button type="button" id="resetBtn" class="rounded-2xl px-5 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700">Сбросить</button>
-      <button type="button" id="moreConfetti" class="rounded-2xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Ещё конфетти</button>
-    </div>
-  </section>
-
-  <section class="card p-6">
-    <div class="flex items-center justify-between mb-3">
-      <h3 class="text-xl font-semibold">🏆 Таблица лидеров</h3>
-      <button id="lbRefresh" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Обновить</button>
-    </div>
-    <div class="overflow-x-auto rounded-xl border border-slate-800">
-      <table class="min-w-full text-sm">
-        <thead class="bg-slate-800/70">
-          <tr><th class="px-3 py-2 text-left">Участник</th><th class="px-3 py-2">Решено</th><th class="px-3 py-2">Попыток</th></tr>
-        </thead>
-        <tbody id="lbBody" class="divide-y divide-slate-800"></tbody>
-      </table>
-    </div>
-  </section>
+ <div class="flex gap-3 items-end">
+   <label class="text-sm text-slate-300">Ник/ФИО (для зачёта):</label>
+   <input id="user" type="text" placeholder="anon" class="rounded-2xl bg-slate-800/80 border border-slate-700 px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500" />
+ </div>
+ 
+ <!-- Level 1 -->
+ <section id="level1" class="card p-6">
+   <h2 class="text-2xl font-semibold">Уровень 1 — Base64</h2>
+   <p class="mt-1 text-slate-300">Декодируйте строку и введите флаг целиком.</p>
+   <div class="mt-4 p-4 rounded-xl bg-slate-900/70 font-mono overflow-x-auto">TUdLRUlUQ1RGe2hlbGxvX3dvcmxkfQ==</div>
+   <div class="mt-4 flex flex-col sm:flex-row gap-3">
+     <input id="flag1" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+     <button type="button" data-check="1" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
+   </div>
+   <p id="msg1" class="mt-3 text-sm"></p>
+   <div class="mt-4 hidden" id="next1">
+     <button type="button" data-go="2" class="rounded-2xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Перейти на уровень 2 ↓</button>
+   </div>
+ </section>
+ 
+ <!-- Level 2 -->
+ <section id="level2" class="card p-6 hidden">
+   <h2 class="text-2xl font-semibold">Уровень 2 — Сдвиг Цезаря</h2>
+   <p class="mt-1 text-slate-300">Внутри фигурных скобок применён сдвиг <strong>+4</strong>. Верните назад.</p>
+   <div class="mt-4 p-4 rounded-xl bg-slate-900/70 font-mono overflow-x-auto">MGKEITCTF{jmb_xli_psmkmg}</div>
+   <details class="mt-3 text-slate-400"><summary class="cursor-pointer hover:text-slate-200">Подсказка</summary><div class="mt-2 text-slate-300">a→w, b→x, c→y, d→z, e→a…</div></details>
+   <div class="mt-4 flex flex-col sm:flex-row gap-3">
+     <input id="flag2" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+     <button type="button" data-check="2" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
+   </div>
+   <p id="msg2" class="mt-3 text-sm"></p>
+   <div class="mt-4 hidden" id="next2">
+     <button type="button" data-go="3" class="rounded-2xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Перейти на уровень 3 ↓</button>
+   </div>
+ </section>
+ 
+ <!-- Level 3 -->
+ <section id="level3" class="card p-6 hidden">
+   <h2 class="text-2xl font-semibold">Уровень 3 — Поиск в коде</h2>
+   <p class="mt-1 text-slate-300">Флаг спрятан в исходнике страницы. Найдите и введите.</p>
+   <!-- FULL FLAG FOR LEVEL 3: MGKEITCTF{web_warrior} -->
+   <div id="flag-explicit" data-flag="MGKEITCTF{web_warrior}" style="display:none" aria-hidden="true"></div>
+   <div class="mt-4 flex flex-col sm:flex-row gap-3">
+     <input id="flag3" type="text" placeholder="MGKEITCTF{...}" class="flag w-full sm:flex-1 rounded-2xl bg-slate-800/80 border border-slate-700 px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500 font-mono" />
+     <button type="button" data-check="3" class="rounded-2xl px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-[.99] transition">Проверить</button>
+   </div>
+   <p id="msg3" class="mt-3 text-sm"></p>
+   <div class="mt-4 hidden" id="next3">
+     <button type="button" id="celebrateBtn" class="rounded-2xl px-5 py-3 bg-fuchsia-600 hover:bg-fuchsia-500">Ура! Что дальше?</button>
+   </div>
+ </section>
+ 
+ <!-- Ачивки -->
+ <section class="max-w-5xl mx-auto">
+   <div id="badges" class="flex flex-wrap gap-3"></div>
+ </section>
+ 
+ <!-- Быстрые инструменты -->
+ <section class="card p-6">
+   <h3 class="text-xl font-semibold mb-4">🛠 Быстрые инструменты</h3>
+   <div class="grid md:grid-cols-3 gap-4">
+     <!-- Base64 -->
+     <div class="rounded-xl border border-slate-800 p-4 bg-slate-900/60">
+       <div class="font-medium mb-2">Base64</div>
+       <textarea id="b64in" class="w-full h-24 rounded-lg bg-slate-800 border border-slate-700 p-2 font-mono" placeholder="Текст или base64"></textarea>
+       <div class="mt-2 flex gap-2">
+         <button onclick="b64d()" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Декод</button>
+         <button onclick="b64e()" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Код</button>
+         <button onclick="copyTxt('#b64in')" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">⧉</button>
+       </div>
+     </div>
+     <!-- Caesar -->
+     <div class="rounded-xl border border-slate-800 p-4 bg-slate-900/60">
+       <div class="font-medium mb-2">Сдвиг Цезаря</div>
+       <input id="czshift" type="number" value="4" class="w-20 rounded bg-slate-800 border border-slate-700 p-2 mr-2">
+       <textarea id="czin" class="w-full h-24 rounded-lg bg-slate-800 border border-slate-700 p-2 font-mono" placeholder="Текст..."></textarea>
+       <div class="mt-2 flex gap-2">
+         <button onclick="cz(-1)" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Декр.</button>
+         <button onclick="cz(1)"  class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Инкр.</button>
+         <button onclick="copyTxt('#czin')" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">⧉</button>
+       </div>
+     </div>
+     <!-- Hash -->
+     <div class="rounded-xl border border-slate-800 p-4 bg-slate-900/60">
+       <div class="font-medium mb-2">SHA-256 Hash</div>
+       <textarea id="hbin" class="w-full h-24 rounded-lg bg-slate-800 border border-slate-700 p-2 font-mono" placeholder="Текст..."></textarea>
+       <div class="mt-2 flex gap-2">
+         <button onclick="sha256btn()" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Хэш</button>
+         <button onclick="copyTxt('#hbin')" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">⧉</button>
+       </div>
+     </div>
+   </div>
+ </section>
+ 
+ <!-- Финал + лидерборд -->
+ <section id="finish" class="card p-8 hidden text-center">
+   <h2 class="text-3xl font-bold">Супер! Ты прошёл все уровни 🎉</h2>
+   <p class="mt-2 text-slate-300">Можно перезагрузить страницу или вернуться к любому уровню выше.</p>
+   <div class="mt-4 flex justify-center gap-3">
+     <button type="button" id="resetBtn" class="rounded-2xl px-5 py-3 bg-slate-800 border border-slate-700 hover:bg-slate-700">Сбросить</button>
+     <button type="button" id="moreConfetti" class="rounded-2xl px-5 py-3 bg-emerald-600 hover:bg-emerald-500">Ещё конфетти</button>
+   </div>
+ </section>
+ 
+ <section class="card p-6">
+   <div class="flex items-center justify-between mb-3">
+     <h3 class="text-xl font-semibold">🏆 Таблица лидеров</h3>
+     <button id="lbRefresh" class="px-3 py-1.5 rounded bg-slate-800 border border-slate-700">Обновить</button>
+   </div>
+   <div class="overflow-x-auto rounded-xl border border-slate-800">
+     <table class="min-w-full text-sm">
+       <thead class="bg-slate-800/70">
+         <tr><th class="px-3 py-2 text-left">Участник</th><th class="px-3 py-2">Решено</th><th class="px-3 py-2">Попыток</th></tr>
+       </thead>
+       <tbody id="lbBody" class="divide-y divide-slate-800"></tbody>
+     </table>
+   </div>
+ </section>
 </main>
-
+ 
 <footer class="max-w-5xl mx-auto px-4 pb-10 text-slate-400 text-sm">
-  <p>Организатор: все тексты можно править в HTML. Проверка флагов — локальная.</p>
+ <p>Организатор: все тексты можно править в HTML. Проверка флагов — через Cloudflare Worker.</p>
 </footer>
-
+ 
 <script>
-  // === настройки (локальная версия)
-  const CHECK_URL = null; // Отключаем внешнюю проверку
-  const LB_URL = null;
-
-  // хоткеи
-  document.addEventListener('keydown', (e)=>{
-    if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName) && e.key!=='Enter') return;
-    if (e.key==='1') showLevel(1);
-    if (e.key==='2') showLevel(2);
-    if (e.key==='3') showLevel(3);
-    if (e.key==='Enter') {
-      const lvl = Number(localStorage.getItem('currentLevel')||1);
-      document.querySelector(`[data-check="${lvl}"]`)?.click();
-    }
-    if (e.key.toLowerCase()==='t') location.href='theory.html';
-  });
-
-  function markStepper(active){ for (let i=1;i<=3;i++) document.getElementById('stepBtn'+i).classList.remove('step-active'); document.getElementById('stepBtn'+active).classList.add('step-active'); }
-  function showLevel(n){
-    for (let i=1;i<=3;i++) document.getElementById('level'+i).classList.add('hidden');
-    document.getElementById('level'+n).classList.remove('hidden');
-    markStepper(n); localStorage.setItem('currentLevel', String(n));
-    window.scrollTo({ top: document.getElementById('level'+n).offsetTop - 10, behavior: 'smooth' });
-  }
-  function spawnConfetti(){
-    const colors=['#60a5fa','#a78bfa','#34d399','#f472b6','#f59e0b','#eab308'];
-    for (let i=0;i<60;i++){ const d=document.createElement('div'); d.className='confetti'; d.style.left=Math.random()*100+'vw'; d.style.background=colors[Math.floor(Math.random()*colors.length)]; d.style.animationDuration=(1.5+Math.random()*1.5)+'s'; d.style.transform='rotate('+(Math.random()*360)+'deg)'; document.body.appendChild(d); setTimeout(()=>d.remove(),3000);}
-  }
-  // ачивки
-  window.unlockBadge = function (id, title, emoji){
-    const key='badge_'+id; if(localStorage.getItem(key)) return;
-    localStorage.setItem(key, '1');
-    const b=document.createElement('div');
-    b.className='px-3 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/40';
-    b.textContent=emoji+' '+title; document.getElementById('badges').appendChild(b);
-    (function conf(){ for(let i=0;i<25;i++){ const d=document.createElement('div'); d.style.cssText=`position:fixed;top:-10px;left:${Math.random()*100}vw;width:8px;height:14px;background:hsl(${Math.random()*360} 80% 60%);opacity:.9;transform:rotate(${Math.random()*360}deg);transition:transform 1.5s linear, top 1.5s linear; z-index:9999;`; document.body.appendChild(d); setTimeout(()=>{ d.style.top='105vh'; d.style.transform+=' translateY(100vh)'; },10); setTimeout(()=>d.remove(),1600);} })();
-  }
-
-  // проверка флага (локальная)
-  async function doCheck(level){
-    const input = document.getElementById('flag'+level);
-    const msg = document.getElementById('msg'+level);
-    const user = (document.getElementById('user').value||'anon').trim();
-
-    msg.textContent = 'Проверяю…';
-    msg.className = 'mt-3 text-sm text-slate-300';
-
-    // Локальная проверка флагов
-    const correctFlags = {
-      1: 'MGKEITCTF{hello_world}',
-      2: 'MGKEITCTF{fix_the_loigic}', 
-      3: 'MGKEITCTF{web_warrior}'
-    };
-
-    // Имитация задержки сети
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    const userFlag = input.value.trim();
-    
-    if (userFlag === correctFlags[level]) {
-      input.classList.remove('err');
-      input.classList.add('ok');
-      
-      const texts = {
-        1: 'Молодец! Переходи на уровень 2 ↓', 
-        2: 'Отлично! Переходи на уровень 3 ↓', 
-        3: 'Супер! Ты прошёл все уровни 🎉'
-      };
-      
-      msg.textContent = texts[level];
-      msg.className = 'mt-3 text-sm text-emerald-400';
-      
-      if (level === 1) unlockBadge('l1', 'Первый флаг!', '🥇');
-      if (level === 2) unlockBadge('l2', 'Два из трёх!', '🥈');
-      if (level === 3) unlockBadge('l3', 'Стажёр-хакер', '🥳');
-      
-      if (level < 3) {
-        document.getElementById('next'+level).classList.remove('hidden');
-        setTimeout(() => showLevel(level+1), 900);
-      } else {
-        document.getElementById('next3').classList.remove('hidden');
-        document.getElementById('finish').classList.remove('hidden');
-        spawnConfetti();
-      }
-      
-      // Сохраняем прогресс
-      saveProgress(user, level);
-      
-    } else {
-      input.classList.remove('ok');
-      input.classList.add('err');
-      setTimeout(() => input.classList.remove('err'), 1200);
-      msg.textContent = 'Неверно. Проверь формат и решение.';
-      msg.className = 'mt-3 text-sm text-rose-400';
-    }
-  }
-
-  // Сохранение прогресса в localStorage
-  function saveProgress(user, level) {
-    const progress = JSON.parse(localStorage.getItem('userProgress') || '{}');
-    if (!progress[user]) {
-      progress[user] = { solved: 0, levels: [], tries: 0 };
-    }
-    if (!progress[user].levels.includes(level)) {
-      progress[user].levels.push(level);
-      progress[user].solved = progress[user].levels.length;
-    }
-    progress[user].tries = (progress[user].tries || 0) + 1;
-    localStorage.setItem('userProgress', JSON.stringify(progress));
-  }
-
-  // Обновленная функция лидерборда (локальная)
-  function loadLB() {
-    const progress = JSON.parse(localStorage.getItem('userProgress') || '{}');
-    const tb = document.getElementById('lbBody');
-    tb.innerHTML = '';
-    
-    const users = Object.entries(progress)
-      .map(([user, data]) => ({ 
-        user, 
-        solved: data.solved || 0, 
-        tries: data.tries || data.levels?.length || 0 
-      }))
-      .sort((a, b) => b.solved - a.solved || a.tries - b.tries);
-    
-    if (users.length === 0) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td colspan="3" class="px-3 py-4 text-center text-slate-500">Пока нет участников</td>`;
-      tb.appendChild(tr);
-      return;
-    }
-    
-    users.forEach((r, i) => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="px-3 py-2">${i+1}. ${r.user}</td>
-        <td class="px-3 py-2 text-center">${r.solved}</td>
-        <td class="px-3 py-2 text-center">${r.tries}</td>
-      `;
-      tb.appendChild(tr);
-    });
-  }
-
-  // утилиты инструментов
-  function copyTxt(sel){ const t=document.querySelector(sel); navigator.clipboard.writeText(t.value||''); }
-  function b64d(){ const a=document.getElementById('b64in'); try{ a.value = atob(a.value.trim()); }catch{ alert('Не похоже на Base64'); } }
-  function b64e(){ const a=document.getElementById('b64in'); a.value = btoa(a.value); }
-  function cz(dir){ const sh=Number(document.getElementById('czshift').value)||0; const a=document.getElementById('czin'); const s=dir*sh;
-    const rot=ch=>{ const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ', aA='abcdefghijklmnopqrstuvwxyz';
-      if (A.includes(ch)) return A[(A.indexOf(ch)+s%26+26)%26];
-      if (aA.includes(ch)) return aA[(aA.indexOf(ch)+s%26+26)%26];
-      return ch; };
-    a.value = a.value.split('').map(rot).join('');
-  }
-  async function sha256btn(){ const a=document.getElementById('hbin'); const enc=new TextEncoder().encode(a.value);
-    const buf=await crypto.subtle.digest('SHA-256', enc);
-    a.value=[...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
-  }
-
-  // init
-  document.addEventListener('DOMContentLoaded', ()=>{
-    document.querySelectorAll('[data-step]').forEach(btn=>btn.addEventListener('click', ()=>showLevel(+btn.dataset.step)));
-    document.querySelectorAll('[data-go]').forEach(btn=>btn.addEventListener('click', ()=>showLevel(+btn.dataset.go)));
-    document.querySelectorAll('[data-check]').forEach(btn=>btn.addEventListener('click', ()=>doCheck(+btn.dataset.check)));
-    document.getElementById('celebrateBtn')?.addEventListener('click', ()=>spawnConfetti());
-    document.getElementById('resetBtn')?.addEventListener('click', ()=>{ 
-      localStorage.removeItem('currentLevel'); 
-      localStorage.removeItem('userProgress');
-      location.reload(); 
-    });
-    document.getElementById('moreConfetti')?.addEventListener('click', ()=>spawnConfetti());
-    document.getElementById('lbRefresh')?.addEventListener('click', loadLB);
-    loadLB();
-
-    // блокируем автозаполнение у всех текстовых инпутов
-    document.querySelectorAll('input[type="text"]').forEach((el,i)=>{
-      el.setAttribute('autocomplete','off');
-      el.setAttribute('autocapitalize','off');
-      el.setAttribute('autocorrect','off');
-      el.setAttribute('spellcheck','false');
-      el.setAttribute('name', `nohist_${Date.now()}_${i}_${Math.random().toString(36).slice(2,7)}`);
-      el.setAttribute('readonly','readonly');
-      el.addEventListener('focus', ()=> setTimeout(()=>el.removeAttribute('readonly'), 0), { once:true });
-    });
-
-    const saved=parseInt(localStorage.getItem('currentLevel')||'1',10);
-    showLevel(isNaN(saved)?1:saved);
-    
-    // Загружаем существующие ачивки
-    const badges = [
-      {id: 'l1', title: 'Первый флаг!', emoji: '🥇'},
-      {id: 'l2', title: 'Два из трёх!', emoji: '🥈'},
-      {id: 'l3', title: 'Стажёр-хакер', emoji: '🥳'}
-    ];
-    
-    badges.forEach(badge => {
-      if (localStorage.getItem('badge_' + badge.id)) {
-        const b = document.createElement('div');
-        b.className = 'px-3 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/40';
-        b.textContent = badge.emoji + ' ' + badge.title;
-        document.getElementById('badges').appendChild(b);
-      }
-    });
-  });
+ // === настройки
+ const CHECK_URL = "https://mgkeit-check.mokrushinaolllya.workers.dev";
+ const LB_URL = CHECK_URL + "/leaderboard";
+ 
+ // хоткеи
+ document.addEventListener('keydown', (e)=>{
+   if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName) && e.key!=='Enter') return;
+   if (e.key==='1') showLevel(1);
+   if (e.key==='2') showLevel(2);
+   if (e.key==='3') showLevel(3);
+   if (e.key==='Enter') {
+     const lvl = Number(localStorage.getItem('currentLevel')||1);
+     document.querySelector(`[data-check="${lvl}"]`)?.click();
+   }
+   if (e.key.toLowerCase()==='t') location.href='theory.html';
+ });
+ 
+ function markStepper(active){ for (let i=1;i<=3;i++) document.getElementById('stepBtn'+i).classList.remove('step-active'); document.getElementById('stepBtn'+active).classList.add('step-active'); }
+ function showLevel(n){
+   for (let i=1;i<=3;i++) document.getElementById('level'+i).classList.add('hidden');
+   document.getElementById('level'+n).classList.remove('hidden');
+   markStepper(n); localStorage.setItem('currentLevel', String(n));
+   window.scrollTo({ top: document.getElementById('level'+n).offsetTop - 10, behavior: 'smooth' });
+ }
+ function spawnConfetti(){
+   const colors=['#60a5fa','#a78bfa','#34d399','#f472b6','#f59e0b','#eab308'];
+   for (let i=0;i<60;i++){ const d=document.createElement('div'); d.className='confetti'; d.style.left=Math.random()*100+'vw'; d.style.background=colors[Math.floor(Math.random()*colors.length)]; d.style.animationDuration=(1.5+Math.random()*1.5)+'s'; d.style.transform='rotate('+(Math.random()*360)+'deg)'; document.body.appendChild(d); setTimeout(()=>d.remove(),3000);}
+ }
+ // ачивки
+ window.unlockBadge = function (id, title, emoji){
+   const key='badge_'+id; if(localStorage.getItem(key)) return;
+   localStorage.setItem(key, '1');
+   const b=document.createElement('div');
+   b.className='px-3 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/40';
+   b.textContent=emoji+' '+title; document.getElementById('badges').appendChild(b);
+   (function conf(){ for(let i=0;i<25;i++){ const d=document.createElement('div'); d.style.cssText=`position:fixed;top:-10px;left:${Math.random()*100}vw;width:8px;height:14px;background:hsl(${Math.random()*360} 80% 60%);opacity:.9;transform:rotate(${Math.random()*360}deg);transition:transform 1.5s linear, top 1.5s linear; z-index:9999;`; document.body.appendChild(d); setTimeout(()=>{ d.style.top='105vh'; d.style.transform+=' translateY(100vh)'; },10); setTimeout(()=>d.remove(),1600);} })();
+ }
+ 
+ // проверка флага
+ async function doCheck(level){
+   const input=document.getElementById('flag'+level);
+   const msg=document.getElementById('msg'+level);
+   const user=(document.getElementById('user').value||'anon').trim();
+ 
+   msg.textContent='Проверяю…'; msg.className='mt-3 text-sm text-slate-300';
+ 
+   try{
+     const res = await fetch(CHECK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ flag: input.value.trim(), level, user }) });
+     const data = await res.json();
+     if (data && data.ok){
+       input.classList.remove('err'); input.classList.add('ok');
+       const texts={1:'Молодец! Переходи на уровень 2 ↓', 2:'Отлично! Переходи на уровень 3 ↓', 3:'Супер! Ты прошёл все уровни 🎉'};
+       msg.textContent=texts[level]; msg.className='mt-3 text-sm text-emerald-400';
+       if (level===1) unlockBadge('l1','Первый флаг!','🥇');
+       if (level===2) unlockBadge('l2','Два из трёх!','🥈');
+       if (level===3) unlockBadge('l3','Стажёр-хакер','🥳');
+       if (level<3){ document.getElementById('next'+level).classList.remove('hidden'); setTimeout(()=>showLevel(level+1), 900);}
+       else { document.getElementById('next3').classList.remove('hidden'); document.getElementById('finish').classList.remove('hidden'); spawnConfetti(); }
+     } else {
+       input.classList.remove('ok'); input.classList.add('err'); setTimeout(()=>input.classList.remove('err'),1200);
+       msg.textContent='Неверно. Проверь формат и решение.'; msg.className='mt-3 text-sm text-rose-400';
+     }
+   } catch(e){
+     input.classList.remove('ok'); input.classList.add('err'); setTimeout(()=>input.classList.remove('err'),1200);
+     msg.textContent='Ошибка соединения с сервером проверки.'; msg.className='mt-3 text-sm text-rose-400';
+   }
+ }
+ 
+ // лидерборд
+ async function loadLB(){
+   try{
+     const {rows=[]}=await fetch(LB_URL).then(r=>r.json());
+     const tb=document.getElementById('lbBody'); tb.innerHTML='';
+     rows.forEach((r,i)=>{
+       const tr=document.createElement('tr');
+       tr.innerHTML = `<td class="px-3 py-2">${i+1}. ${r.user}</td><td class="px-3 py-2 text-center">${r.solved}</td><td class="px-3 py-2 text-center">${r.tries}</td>`;
+       tb.appendChild(tr);
+     });
+   }catch{}
+ }
+ 
+ // утилиты инструментов
+ function copyTxt(sel){ const t=document.querySelector(sel); navigator.clipboard.writeText(t.value||''); }
+ function b64d(){ const a=document.getElementById('b64in'); try{ a.value = atob(a.value.trim()); }catch{ alert('Не похоже на Base64'); } }
+ function b64e(){ const a=document.getElementById('b64in'); a.value = btoa(a.value); }
+ function cz(dir){ const sh=Number(document.getElementById('czshift').value)||0; const a=document.getElementById('czin'); const s=dir*sh;
+   const rot=ch=>{ const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ', aA='abcdefghijklmnopqrstuvwxyz';
+     if (A.includes(ch)) return A[(A.indexOf(ch)+s%26+26)%26];
+     if (aA.includes(ch)) return aA[(aA.indexOf(ch)+s%26+26)%26];
+     return ch; };
+   a.value = a.value.split('').map(rot).join('');
+ }
+ async function sha256btn(){ const a=document.getElementById('hbin'); const enc=new TextEncoder().encode(a.value);
+   const buf=await crypto.subtle.digest('SHA-256', enc);
+   a.value=[...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
+ }
+ 
+ // init
+ document.addEventListener('DOMContentLoaded', ()=>{
+   document.querySelectorAll('[data-step]').forEach(btn=>btn.addEventListener('click', ()=>showLevel(+btn.dataset.step)));
+   document.querySelectorAll('[data-go]').forEach(btn=>btn.addEventListener('click', ()=>showLevel(+btn.dataset.go)));
+   document.querySelectorAll('[data-check]').forEach(btn=>btn.addEventListener('click', ()=>doCheck(+btn.dataset.check)));
+   document.getElementById('celebrateBtn')?.addEventListener('click', ()=>spawnConfetti());
+   document.getElementById('resetBtn')?.addEventListener('click', ()=>{ localStorage.removeItem('currentLevel'); location.reload(); });
+   document.getElementById('moreConfetti')?.addEventListener('click', ()=>spawnConfetti());
+   document.getElementById('lbRefresh')?.addEventListener('click', loadLB);
+   loadLB();
+ 
+   // блокируем автозаполнение у всех текстовых инпутов
+   document.querySelectorAll('input[type="text"]').forEach((el,i)=>{
+     el.setAttribute('autocomplete','off');
+     el.setAttribute('autocapitalize','off');
+     el.setAttribute('autocorrect','off');
+     el.setAttribute('spellcheck','false');
+     el.setAttribute('name', `nohist_${Date.now()}_${i}_${Math.random().toString(36).slice(2,7)}`);
+     el.setAttribute('readonly','readonly');
+     el.addEventListener('focus', ()=> setTimeout(()=>el.removeAttribute('readonly'), 0), { once:true });
+   });
+ 
+   const saved=parseInt(localStorage.getItem('currentLevel')||'1',10);
+   showLevel(isNaN(saved)?1:saved);
+ });
 </script>
 </body>
 </html>
