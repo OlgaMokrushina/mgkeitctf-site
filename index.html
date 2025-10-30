@@ -36,7 +36,7 @@
  <h1 class="text-3xl md:text-4xl font-bold glow">MGKEITCTF — тренировочный мини-сайт</h1>
  <div class="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
    <p class="text-slate-300 text-sm">
-     Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются по одному, проверка — на сервере.
+     Формат флага <code class="px-1 rounded bg-slate-800">MGKEITCTF{...}</code>. Уровни показываются по одному, проверка — локальная.
    </p>
    <a href="theory.html" class="inline-flex items-center bg-indigo-600 hover:bg-indigo-500 text-white text-sm px-4 py-2 rounded-lg transition">
      📘 Теория CTF
@@ -175,13 +175,28 @@
 </main>
  
 <footer class="max-w-5xl mx-auto px-4 pb-10 text-slate-400 text-sm">
- <p>Организатор: все тексты можно править в HTML. Проверка флагов — через Cloudflare Worker.</p>
+ <p>Организатор: все тексты можно править в HTML. Проверка флагов — локальная.</p>
 </footer>
  
 <script>
- // === настройки
- const CHECK_URL = "https://mgkeit-check.mokrushinaolllya.workers.dev";
- const LB_URL = CHECK_URL + "/leaderboard";
+ // === Правильные флаги для каждого уровня ===
+ const CORRECT_FLAGS = {
+   1: "MGKEITCTF{hello_world}",
+   2: "MGKEITCTF{fix_the_loigic}",
+   3: "MGKEITCTF{web_warrior}"
+ };
+ 
+ // === Локальная проверка флагов ===
+ function checkFlagLocally(level, userFlag) {
+   const correctFlag = CORRECT_FLAGS[level];
+   if (!correctFlag) return false;
+   
+   // Нормализуем ввод: удаляем лишние пробелы, приводим к верхнему регистру
+   const normalizedInput = userFlag.trim().toUpperCase();
+   const normalizedCorrect = correctFlag.toUpperCase();
+   
+   return normalizedInput === normalizedCorrect;
+ }
  
  // хоткеи
  document.addEventListener('keydown', (e)=>{
@@ -217,47 +232,80 @@
    (function conf(){ for(let i=0;i<25;i++){ const d=document.createElement('div'); d.style.cssText=`position:fixed;top:-10px;left:${Math.random()*100}vw;width:8px;height:14px;background:hsl(${Math.random()*360} 80% 60%);opacity:.9;transform:rotate(${Math.random()*360}deg);transition:transform 1.5s linear, top 1.5s linear; z-index:9999;`; document.body.appendChild(d); setTimeout(()=>{ d.style.top='105vh'; d.style.transform+=' translateY(100vh)'; },10); setTimeout(()=>d.remove(),1600);} })();
  }
  
- // проверка флага
+ // проверка флага (локальная)
  async function doCheck(level){
    const input=document.getElementById('flag'+level);
    const msg=document.getElementById('msg'+level);
    const user=(document.getElementById('user').value||'anon').trim();
- 
+
    msg.textContent='Проверяю…'; msg.className='mt-3 text-sm text-slate-300';
- 
-   try{
-     const res = await fetch(CHECK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ flag: input.value.trim(), level, user }) });
-     const data = await res.json();
-     if (data && data.ok){
-       input.classList.remove('err'); input.classList.add('ok');
-       const texts={1:'Молодец! Переходи на уровень 2 ↓', 2:'Отлично! Переходи на уровень 3 ↓', 3:'Супер! Ты прошёл все уровни 🎉'};
-       msg.textContent=texts[level]; msg.className='mt-3 text-sm text-emerald-400';
-       if (level===1) unlockBadge('l1','Первый флаг!','🥇');
-       if (level===2) unlockBadge('l2','Два из трёх!','🥈');
-       if (level===3) unlockBadge('l3','Стажёр-хакер','🥳');
-       if (level<3){ document.getElementById('next'+level).classList.remove('hidden'); setTimeout(()=>showLevel(level+1), 900);}
-       else { document.getElementById('next3').classList.remove('hidden'); document.getElementById('finish').classList.remove('hidden'); spawnConfetti(); }
-     } else {
-       input.classList.remove('ok'); input.classList.add('err'); setTimeout(()=>input.classList.remove('err'),1200);
-       msg.textContent='Неверно. Проверь формат и решение.'; msg.className='mt-3 text-sm text-rose-400';
-     }
-   } catch(e){
+
+   // Имитируем небольшую задержку для реалистичности
+   await new Promise(resolve => setTimeout(resolve, 300));
+
+   const isCorrect = checkFlagLocally(level, input.value);
+   
+   if (isCorrect){
+     input.classList.remove('err'); input.classList.add('ok');
+     const texts={1:'Молодец! Переходи на уровень 2 ↓', 2:'Отлично! Переходи на уровень 3 ↓', 3:'Супер! Ты прошёл все уровни 🎉'};
+     msg.textContent=texts[level]; msg.className='mt-3 text-sm text-emerald-400';
+     if (level===1) unlockBadge('l1','Первый флаг!','🥇');
+     if (level===2) unlockBadge('l2','Два из трёх!','🥈');
+     if (level===3) unlockBadge('l3','Стажёр-хакер','🥳');
+     if (level<3){ document.getElementById('next'+level).classList.remove('hidden'); setTimeout(()=>showLevel(level+1), 900);}
+     else { document.getElementById('next3').classList.remove('hidden'); document.getElementById('finish').classList.remove('hidden'); spawnConfetti(); }
+     
+     // Сохраняем прогресс в localStorage
+     saveProgress(level, user);
+   } else {
      input.classList.remove('ok'); input.classList.add('err'); setTimeout(()=>input.classList.remove('err'),1200);
-     msg.textContent='Ошибка соединения с сервером проверки.'; msg.className='mt-3 text-sm text-rose-400';
+     msg.textContent='Неверно. Проверь формат и решение.'; msg.className='mt-3 text-sm text-rose-400';
    }
  }
  
- // лидерборд
- async function loadLB(){
-   try{
-     const {rows=[]}=await fetch(LB_URL).then(r=>r.json());
-     const tb=document.getElementById('lbBody'); tb.innerHTML='';
-     rows.forEach((r,i)=>{
-       const tr=document.createElement('tr');
-       tr.innerHTML = `<td class="px-3 py-2">${i+1}. ${r.user}</td><td class="px-3 py-2 text-center">${r.solved}</td><td class="px-3 py-2 text-center">${r.tries}</td>`;
-       tb.appendChild(tr);
-     });
-   }catch{}
+ // Сохранение прогресса локально
+ function saveProgress(level, user) {
+   const progress = JSON.parse(localStorage.getItem('userProgress') || '{}');
+   if (!progress[user]) {
+     progress[user] = { solved: 0, tries: 0, levels: {} };
+   }
+   
+   if (!progress[user].levels[level]) {
+     progress[user].levels[level] = { solved: true, attempts: 1 };
+     progress[user].solved++;
+   } else {
+     progress[user].levels[level].attempts++;
+   }
+   progress[user].tries++;
+   
+   localStorage.setItem('userProgress', JSON.stringify(progress));
+   updateLeaderboard();
+ }
+ 
+ // Обновление локального лидерборда
+ function updateLeaderboard() {
+   const progress = JSON.parse(localStorage.getItem('userProgress') || '{}');
+   const lbBody = document.getElementById('lbBody');
+   
+   if (!lbBody) return;
+   
+   // Преобразуем объект в массив и сортируем по количеству решенных
+   const leaders = Object.entries(progress).map(([user, data]) => ({
+     user,
+     solved: data.solved || 0,
+     tries: data.tries || 0
+   })).sort((a, b) => b.solved - a.solved || a.tries - b.tries);
+   
+   lbBody.innerHTML = '';
+   leaders.forEach((leader, index) => {
+     const row = document.createElement('tr');
+     row.innerHTML = `
+       <td class="px-3 py-2">${index + 1}. ${leader.user}</td>
+       <td class="px-3 py-2 text-center">${leader.solved}</td>
+       <td class="px-3 py-2 text-center">${leader.tries}</td>
+     `;
+     lbBody.appendChild(row);
+   });
  }
  
  // утилиты инструментов
@@ -284,9 +332,11 @@
    document.getElementById('celebrateBtn')?.addEventListener('click', ()=>spawnConfetti());
    document.getElementById('resetBtn')?.addEventListener('click', ()=>{ localStorage.removeItem('currentLevel'); location.reload(); });
    document.getElementById('moreConfetti')?.addEventListener('click', ()=>spawnConfetti());
-   document.getElementById('lbRefresh')?.addEventListener('click', loadLB);
-   loadLB();
- 
+   document.getElementById('lbRefresh')?.addEventListener('click', updateLeaderboard);
+   
+   // Инициализация лидерборда
+   updateLeaderboard();
+
    // блокируем автозаполнение у всех текстовых инпутов
    document.querySelectorAll('input[type="text"]').forEach((el,i)=>{
      el.setAttribute('autocomplete','off');
@@ -297,9 +347,27 @@
      el.setAttribute('readonly','readonly');
      el.addEventListener('focus', ()=> setTimeout(()=>el.removeAttribute('readonly'), 0), { once:true });
    });
- 
+
    const saved=parseInt(localStorage.getItem('currentLevel')||'1',10);
    showLevel(isNaN(saved)?1:saved);
+   
+   // Восстанавливаем ачивки
+   ['l1','l2','l3'].forEach(badgeId => {
+     if (localStorage.getItem('badge_' + badgeId)) {
+       const badges = {
+         'l1': { title: 'Первый флаг!', emoji: '🥇' },
+         'l2': { title: 'Два из трёх!', emoji: '🥈' },
+         'l3': { title: 'Стажёр-хакер', emoji: '🥳' }
+       };
+       const badge = badges[badgeId];
+       if (badge) {
+         const b=document.createElement('div');
+         b.className='px-3 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/40';
+         b.textContent=badge.emoji+' '+badge.title; 
+         document.getElementById('badges').appendChild(b);
+       }
+     }
+   });
  });
 </script>
 </body>
